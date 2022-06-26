@@ -1,0 +1,5 @@
+logging
+celery for checking current status
+figure out connection issues with local/containerized mosquitto broker
+send out mqtt messages
+models for high and low temp/humidity

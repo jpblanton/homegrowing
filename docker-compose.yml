@@ -19,12 +19,21 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
-  mosquitto:
-    image: eclipse-mosquitto
-    network_mode: host
-    volumes:
-      - ./conf:/mosquitto/conf
-      - ./data:/mosquitto/data
-      - ./log:/mosquitto/log
+#  mosquitto:
+#    image: eclipse-mosquitto
+#    # network_mode: host
+#    ports:
+#      - 21883:1883
+#    volumes:
+#      - ./mosquitto/conf:/mosquitto/conf
+#      - ./mosquitto/data:/mosquitto/data
+#      - ./mosquitto/log:/mosquitto/log
 volumes:
   postgres_data:
+
+    # for now we'll stick to using test.mosquitto.org
+    # should figure this out
+    # using docker inspect homegrowing_mosquitto_1 to get ip address
+    # that gave 172.20.0.2 which led to connect refused
+    # might be able to use "homegrowing_mosquitto_1" or name field instead of ip --this is correct
+    # stackoverflow window open which might help & might want to change mosquitto port mappings

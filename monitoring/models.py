@@ -7,10 +7,19 @@ class SensorData(models.Model):
     data = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
+    def __str__(self) -> str:
+        return "{}|{}|{}".format(self.host, self.metric, self.data)
+
 
 class SensorHost(models.Model):
     host = models.CharField(unique=True, max_length=64)
 
+    def __str__(self) -> str:
+        return self.host
+
 
 class SensorMetric(models.Model):
     metric = models.CharField(unique=True, max_length=255)
+
+    def __str__(self) -> str:
+        return self.metric

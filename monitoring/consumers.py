@@ -4,6 +4,7 @@ from mqttasgi.consumers import MqttConsumer
 from channels.db import database_sync_to_async
 import django
 from django.conf import settings
+from django.db import IntegrityError
 
 from .models import SensorHost, SensorData, SensorMetric
 
@@ -29,8 +30,18 @@ class mqttConsumer(MqttConsumer):
         await self.unsubscribe("my/testing/topic")
 
     @database_sync_to_async
-    def insert_metric(self, payload, place, device, metric):
+    def insert_measure(self, payload, place, device, metric):
         value = round(float(payload), 3)
         host = "_".join([place, device])
-        SensorHost.create(host)
-        SensorMetric.create(metric)
+        try:
+            host_obj = SensorHost.objects.create(host=host).pk
+        except IntegrityError:
+            # logger.log('already exists')
+            print("host already exists")
+            host_obj = SensorHost.objects.filter(host=host)[0]
+        try:
+            metric_obj = SensorMetric.objects.create(metric=metric)
+        except IntegrityError:
+            print("metric already exists")
+            metric_obj = SensorMetric.objects.filter(metric=metric)[0]
+        SensorData.objects.create(host=host_obj, metric=metric_obj, data=value)
