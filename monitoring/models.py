@@ -23,3 +23,14 @@ class SensorMetric(models.Model):
 
     def __str__(self) -> str:
         return self.metric
+
+
+# growth stages
+# id, name, lo hum, hi hum, lo temp, hi temp
+# should be limited to the growth phases we have
+
+# historical_growth_stages
+# every time it switches stage_id gets pushed here
+# can I have a flag in growth_stages table like is_current?
+
+# get_current_growth_stage should be a util

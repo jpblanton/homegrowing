@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from environs import Env
+from celery.schedules import crontab
+
+import config.tasks
 
 env = Env()
 env.read_env()
@@ -147,4 +150,21 @@ LOGOUT_REDIRECT_URL = "home"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # new
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-MQTT_TOPIC_SUBS = ["tent1/DHT22-1/humidity"]
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+CELERY_BEAT_SCHEDULE = {
+    "humidity_rolling_avg": {
+        "task": "monitoring.tasks.top_n_average",
+        "schedule": crontab(minute="*/1"),
+        "args": ("humidity",),
+    },
+}
+# custom settings variables
+
+MQTT_TOPIC_SUBS = [
+    "tent1/DHT22-1/humidity",
+    "tent1/DHT22-1/temperature",
+    "tent1/DHT22-2/humidity",
+    "tent1/DHT22-2/temperature",
+]

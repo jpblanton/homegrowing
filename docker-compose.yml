@@ -10,6 +10,19 @@ services:
       - 8000:8000
     depends_on:
       - db
+      - redis
+    environment:
+      - "DJANGO_DEBUG=True"
+      - "DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9"
+  asgi:
+    build: .
+    command: mqttasgi -H test.mosquitto.org -p 1883 config.asgi:application
+    volumes:
+     - .:/code
+    depends_on:
+      - db
+      - redis
+      - web
     environment:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9"
@@ -19,6 +32,87 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+  celery:
+    build: .
+    command: celery --app config worker --loglevel=info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A config beat -l info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  redis:
+    image: redis:6-alpine
+
+#  mosquitto:
+#    image: eclipse-mosquitto
+#    # network_mode: host
+#    ports:
+#      - 21883:1883
+#    volumes:
+#      - ./mosquitto/conf:/mosquitto/conf
+#      - ./mosquitto/data:/mosquitto/data
+#      - ./mosquitto/log:/mosquitto/log
+volumes:
+  postgres_data:
+
+    # for now we'll stick to using test.mosquitto.org
+    # should figure this out
+    # using docker inspect homegrowing_mosquitto_1 to get ip address
+    # that gave 172.20.0.2 which led to connect refused
+    # might be able to use "homegrowing_mosquitto_1" or name field instead of ip --this is correct
+    # stackoverflow window open which might help & might want to change mosquitto port mappings
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+  celery:
+    build: .
+    command: celery --app config worker --loglevel=info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A config beat -l info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  redis:
+    image: redis:6-alpine
+
 #  mosquitto:
 #    image: eclipse-mosquitto
 #    # network_mode: host

@@ -27,14 +27,18 @@ class mqttConsumer(MqttConsumer):
         print("inserted")
 
     async def disconnect(self):
-        await self.unsubscribe("my/testing/topic")
+        # confirm this field
+        unsubs = [self.unsubscribe(t) for t in self.subscribed_topics]
+        await asyncio.wait(unsubs)
 
     @database_sync_to_async
     def insert_measure(self, payload, place, device, metric):
         value = round(float(payload), 3)
         host = "_".join([place, device])
+        # info level log about host/metric creation
+        # debug for each data insert
         try:
-            host_obj = SensorHost.objects.create(host=host).pk
+            host_obj = SensorHost.objects.create(host=host)
         except IntegrityError:
             # logger.log('already exists')
             print("host already exists")
