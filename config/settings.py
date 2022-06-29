@@ -147,6 +147,15 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # new
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -161,10 +170,13 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 # custom settings variables
-
 MQTT_TOPIC_SUBS = [
     "tent1/DHT22-1/humidity",
     "tent1/DHT22-1/temperature",
     "tent1/DHT22-2/humidity",
     "tent1/DHT22-2/temperature",
 ]
+
+HUMIDIFIER_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991805750894678166/tdCOKUCjqY-dYqGDOGfNPJ7k6xPdd01W6zdzPdnZAcplC1YUa-pcZd0FgxdpkpQA9qJB"
+TEMPERATURE_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991807283870826596/S9oTsSjKwYrweS6OkHecgEudIOZqb4vswTbZG4dR_oHAiaucDSYBiD-55WK-VPuRhq3D"
+HUMIDITY_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991807385469452328/-7qdVvapWdxOu8I9MNGxSqgJr9UVnvVW302PQQfZ5aE8vmWXJBbMBnhvTtfPjHeyD4fw"

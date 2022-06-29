@@ -1,11 +1,12 @@
 from django.db import models
+from django.core.cache import cache
 
 
 class SensorData(models.Model):
     host = models.ForeignKey("SensorHost", models.DO_NOTHING)
     metric = models.ForeignKey("SensorMetric", models.DO_NOTHING)
     data = models.FloatField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return "{}|{}|{}".format(self.host, self.metric, self.data)
@@ -25,12 +26,25 @@ class SensorMetric(models.Model):
         return self.metric
 
 
-# growth stages
-# id, name, lo hum, hi hum, lo temp, hi temp
-# should be limited to the growth phases we have
+class GrowthStage(models.Model):
+    name = models.CharField(unique=True, max_length=64)
+    min_humidity = models.FloatField()
+    max_humidity = models.FloatField()
+    min_temperature = models.FloatField()
+    max_temperature = models.FloatField()
 
-# historical_growth_stages
-# every time it switches stage_id gets pushed here
-# can I have a flag in growth_stages table like is_current?
+    def __str__(self) -> str:
+        return self.name
 
-# get_current_growth_stage should be a util
+
+class GrowthStageHistory(models.Model):
+    growth_stage = models.ForeignKey("GrowthStage", models.DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.growth_stage.name
+
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+        cache.set("growth_stage_changed", True, None)  # don't think we need this tbh
+        cache.set("current_growth_stage_pk", self.pk, None)

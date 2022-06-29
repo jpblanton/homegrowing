@@ -10,11 +10,11 @@ from .models import SensorHost, SensorData, SensorMetric
 
 
 class mqttConsumer(MqttConsumer):
-    async def connect(self):
+    async def connect(self) -> None:
         subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPIC_SUBS]
         await asyncio.wait(subs)
 
-    async def receive(self, mqtt_message):
+    async def receive(self, mqtt_message: dict) -> None:
         topic = mqtt_message["topic"]
         payload = mqtt_message["payload"]
         qos = mqtt_message["qos"]
@@ -26,26 +26,23 @@ class mqttConsumer(MqttConsumer):
                 await self.insert_measure(payload, place, device, metric)
         print("inserted")
 
-    async def disconnect(self):
+    async def disconnect(self) -> None:
         # confirm this field
         unsubs = [self.unsubscribe(t) for t in self.subscribed_topics]
         await asyncio.wait(unsubs)
 
     @database_sync_to_async
-    def insert_measure(self, payload, place, device, metric):
+    def insert_measure(
+        self, payload: str | bytes, place: str, device: str, metric: str
+    ) -> None:
         value = round(float(payload), 3)
         host = "_".join([place, device])
         # info level log about host/metric creation
         # debug for each data insert
-        try:
-            host_obj = SensorHost.objects.create(host=host)
-        except IntegrityError:
-            # logger.log('already exists')
+        host_obj, host_created = SensorHost.objects.get_or_create(host=host)
+        metric_obj, metric_created = SensorMetric.objects.get_or_create(metric=metric)
+        if not host_created:
             print("host already exists")
-            host_obj = SensorHost.objects.filter(host=host)[0]
-        try:
-            metric_obj = SensorMetric.objects.create(metric=metric)
-        except IntegrityError:
+        if not metric_created:
             print("metric already exists")
-            metric_obj = SensorMetric.objects.filter(metric=metric)[0]
         SensorData.objects.create(host=host_obj, metric=metric_obj, data=value)
