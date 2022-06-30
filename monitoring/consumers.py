@@ -13,6 +13,7 @@ class mqttConsumer(MqttConsumer):
     async def connect(self) -> None:
         subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPIC_SUBS]
         await asyncio.wait(subs)
+        await self.channel_layer.group_add("humidifier.group", self.channel_name)
 
     async def receive(self, mqtt_message: dict) -> None:
         topic = mqtt_message["topic"]
@@ -25,6 +26,9 @@ class mqttConsumer(MqttConsumer):
             case [place, device, "temperature" | "humidity" as metric]:
                 await self.insert_measure(payload, place, device, metric)
         print("inserted")
+
+    async def humidifier_switch(self, event):
+        await self.publish("tent1/humidifier/status", event["body"])
 
     async def disconnect(self) -> None:
         # confirm this field

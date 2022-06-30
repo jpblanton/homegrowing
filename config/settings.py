@@ -156,6 +156,15 @@ CACHES = {
     }
 }
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # new
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -164,17 +173,25 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 CELERY_BEAT_SCHEDULE = {
     "humidity_rolling_avg": {
-        "task": "monitoring.tasks.top_n_average",
+        "task": "monitoring.tasks.climate_monitoring",
         "schedule": crontab(minute="*/1"),
         "args": ("humidity",),
     },
+    "temperature_rolling_avg": {
+        "task": "monitoring.tasks.climate_monitoring",
+        "schedule": crontab(minute="*/1"),
+        "args": ("temperature",),
+    },
 }
 # custom settings variables
+# this below is what the switch signal goes on
+# "tent1/humidifier/power"
 MQTT_TOPIC_SUBS = [
     "tent1/DHT22-1/humidity",
     "tent1/DHT22-1/temperature",
     "tent1/DHT22-2/humidity",
     "tent1/DHT22-2/temperature",
+    "tent1/humidifier/status",
 ]
 
 HUMIDIFIER_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991805750894678166/tdCOKUCjqY-dYqGDOGfNPJ7k6xPdd01W6zdzPdnZAcplC1YUa-pcZd0FgxdpkpQA9qJB"

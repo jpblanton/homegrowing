@@ -1,24 +1,15 @@
 tests!!!!!
 
+basic display at least 
+    front page drop down (growth stage) that only superuser james can edit but everyone can view
+
 growth stages - might be worth adding a day/night time temp option
     have to track when the lights are on/off and what time it is
     growth stage would also need to track the lighting option (18/6 or 12/12)
 
-post_save tag in GrowthStageHistory should give a way to send a message
-and let the task know it needs to fetch a new value
-    maybe in the tasks.py file it can load the value, aka when the server is started up
-    then the task just needs to check a flag from settings
-    start off GROWTH_STAGE_CHANGED = False
-    !!!!!! this needs to be in redis
-    when new hit to GrowthStageHistory table, send change that to True
-    if it's true in the task, update value, set to False
-
 logging
-#celery for checking current status
 figure out connection issues with local/containerized mosquitto broker
-send out mqtt messages
-models for high and low temp/humidity
 
-
-
-look into using redis for messaging with devices since we'll need it for celery
+adjustable temp/hum ranges
+    new model (maybe one for each?) - form on the front page just like history
+    when a new GrowthStageHistory is inserted it adds a new record with its parameters
