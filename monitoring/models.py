@@ -13,7 +13,19 @@ class SensorData(models.Model):
 
 
 class SensorHost(models.Model):
+    # want to have the whole host, room_device, as well as fields for both
+    # not perfectly normalized but whatever
+    # override save?
     host = models.CharField(unique=True, max_length=64)
+    # room = models.CharField(max_length=64)
+    # device = models.CharField(max_length=64)
+
+    # might need super(SensorHost, self) based on
+    # https://stackoverflow.com/questions/30586994/django-model-save-computed-value-in-a-model-field
+
+    # def save(self, *args, **kwargs):
+    #    self.room, self.device = self.host.split("_")
+    #    super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.host
