@@ -1,8 +1,11 @@
+import uuid
+
 from django.db import models
 from django.core.cache import cache
 
 
 class SensorData(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host = models.ForeignKey("SensorHost", models.DO_NOTHING)
     metric = models.ForeignKey("SensorMetric", models.DO_NOTHING)
     data = models.FloatField(blank=True, null=True)
@@ -50,6 +53,7 @@ class GrowthStage(models.Model):
 
 
 class GrowthStageHistory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     growth_stage = models.ForeignKey("GrowthStage", models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -60,3 +64,6 @@ class GrowthStageHistory(models.Model):
         super().save(*args, **kwargs)
         cache.set("growth_stage_changed", True, None)  # don't think we need this tbh
         cache.set("current_growth_stage_pk", self.pk, None)
+
+    class Meta:
+        get_latest_by = "created_at"

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import datetime
+
 from environs import Env
 from celery.schedules import crontab
 
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     # 3rd party
     "crispy_forms",
     "crispy_bootstrap5",
+    "rest_framework",
     # local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -147,6 +150,22 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {"format": "%(asctime)s %(name)-28s %(levelname)-8s %(message)s"}
+    },
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/code/logs/{:%Y-%m-%d}.log".format(datetime.now()),
+            "formatter": "default",
+        },
+    },
+    "root": {"handlers": ["file"], "level": "DEBUG"},
+}
 
 CACHES = {
     "default": {

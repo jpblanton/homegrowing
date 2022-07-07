@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from mqttasgi.consumers import MqttConsumer
 from channels.db import database_sync_to_async
@@ -9,6 +10,9 @@ from django.db import IntegrityError
 from .models import SensorHost, SensorData, SensorMetric
 
 
+logger = logging.getLogger(__name__)
+
+
 class mqttConsumer(MqttConsumer):
     async def connect(self) -> None:
         subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPIC_SUBS]
@@ -16,16 +20,21 @@ class mqttConsumer(MqttConsumer):
         await self.channel_layer.group_add("humidifier.group", self.channel_name)
 
     async def receive(self, mqtt_message: dict) -> None:
+        # should we create a table to log all messages topic/payload/qos?
+        # also need to start making all messages qos 2
         topic = mqtt_message["topic"]
         payload = mqtt_message["payload"]
         qos = mqtt_message["qos"]
-        print("Received a message at topic:", topic)
-        print("With payload", payload)
-        print("And QOS:", qos)
+        logger.info("Received a message at topic: {}".format(topic))
+        logger.info("With payload {}".format(payload))
+        logger.info("And QOS: {}".format(qos))
         match mqtt_message["topic"].split("/"):
             case [place, device, "temperature" | "humidity" as metric]:
                 await self.insert_measure(payload, place, device, metric)
-        print("inserted")
+            case [place, device, "error" | "warning" as issue]:
+                pass
+            case _:
+                pass
 
     async def humidifier_switch(self, event):
         await self.publish("tent1/humidifier/status", event["body"])
