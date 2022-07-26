@@ -183,6 +183,7 @@ CELERY_BEAT_SCHEDULE = {
         "args": ("temperature",),
     },
 }
+
 # custom settings variables
 # this below is what the switch signal goes on
 # "tent1/humidifier/power"
@@ -193,6 +194,29 @@ MQTT_TOPIC_SUBS = [
     "tent1/DHT22-2/temperature",
     "tent1/humidifier/status",
 ]
+
+MQTT_TOPICS = {
+    "tent1_DHT22-1_humidity": "tent1/DHT22-1/humidity",
+    "tent1_DHT22-1_temperature": "tent1/DHT22-1/temperature",
+    "tent1_DHT22-2_humidity": "tent1/DHT22-2/humidity",
+    "tent1_DHT22-2_temperature": "tent1/DHT22-2/temperature",
+    "tent1_humidifier_status": "tent1/humidifier/status",
+}
+
+MQTT_TOPICS_DICT = {
+    "tent1": {
+        "DHT22-1": {
+            "humididity": "tent1/DHT22-1/humidity",
+            "temperature": "tent1/DHT22-1/temperature",
+        },
+        "DHT22-2": {
+            "humididity": "tent1/DHT22-2/humidity",
+            "temperature": "tent1/DHT22-2/temperature",
+        },
+        "humidifier": {"status": "tent1/humidifier/status"},
+    }
+}
+
 
 HUMIDIFIER_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991805750894678166/tdCOKUCjqY-dYqGDOGfNPJ7k6xPdd01W6zdzPdnZAcplC1YUa-pcZd0FgxdpkpQA9qJB"
 TEMPERATURE_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991807283870826596/S9oTsSjKwYrweS6OkHecgEudIOZqb4vswTbZG4dR_oHAiaucDSYBiD-55WK-VPuRhq3D"

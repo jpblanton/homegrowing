@@ -60,3 +60,13 @@ class GrowthStageHistory(models.Model):
         super().save(*args, **kwargs)
         cache.set("growth_stage_changed", True, None)  # don't think we need this tbh
         cache.set("current_growth_stage_pk", self.pk, None)
+
+
+class MQTTMessage(models.Model):
+    topic = models.CharField(max_length=128)
+    payload = models.TextField()
+    qos = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.message

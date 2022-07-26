@@ -6,12 +6,12 @@ import django
 from django.conf import settings
 from django.db import IntegrityError
 
-from .models import SensorHost, SensorData, SensorMetric
+from .models import SensorHost, SensorData, SensorMetric, MQTTMessage
 
 
 class mqttConsumer(MqttConsumer):
     async def connect(self) -> None:
-        subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPIC_SUBS]
+        subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPICS.values()]
         await asyncio.wait(subs)
         await self.channel_layer.group_add("humidifier.group", self.channel_name)
 
@@ -19,16 +19,16 @@ class mqttConsumer(MqttConsumer):
         topic = mqtt_message["topic"]
         payload = mqtt_message["payload"]
         qos = mqtt_message["qos"]
-        print("Received a message at topic:", topic)
-        print("With payload", payload)
-        print("And QOS:", qos)
+        message = await database_sync_to_async(MQTTMessage.create(topic=topic, payload=payload, qos=qos))
         match mqtt_message["topic"].split("/"):
             case [place, device, "temperature" | "humidity" as metric]:
                 await self.insert_measure(payload, place, device, metric)
-        print("inserted")
 
+    # if the dict key is just the topic with a different sep
+    # is this any better?
+    # nested dict
     async def humidifier_switch(self, event):
-        await self.publish("tent1/humidifier/status", event["body"])
+        await self.publish(settings.MQTT_TOPICS["tent1_humidifier_status"], event["body"])
 
     async def disconnect(self) -> None:
         # confirm this field
