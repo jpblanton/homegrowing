@@ -19,6 +19,8 @@ from django.urls import path, include
 urlpatterns = [
     # django admin
     path("admin/", admin.site.urls),
+    # api
+    path("api/v1/", include("monitoring.urls")),
     # user management
     path("accounts/", include("django.contrib.auth.urls")),
     # local apps

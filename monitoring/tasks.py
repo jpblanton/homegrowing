@@ -39,11 +39,12 @@ def handle_results(lst: list) -> None:
 
 
 @shared_task
-def top_n_average(metric: str, n: int = 5) -> float:
+def top_n_average(metric: str, n: int = 10) -> float:
     metric_pk = SensorMetric.objects.get(metric__exact=metric).pk
     top = SensorData.objects.filter(metric__exact=metric_pk).order_by("-created_at")[:n]
     avg = sum(r.data for r in top) / n
     logger.info(f"Current {metric} average is {avg}")
+    # should the recent average be in cache for anything else that might need it?
     return avg
 
 
