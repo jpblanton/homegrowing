@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class mqttConsumer(MqttConsumer):
+    # Class for creating a consumer of MQTT messages
+    # This controls what happens when we receive MQTT messages
+    # Which is how most of our sensors communicate with the server
     async def connect(self) -> None:
         subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPICS.values()]
         await asyncio.wait(subs)
