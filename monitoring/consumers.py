@@ -37,6 +37,7 @@ class mqttConsumer(MqttConsumer):
             case [place, device, "error" | "warning" as issue]:
                 pass
             case _:
+                logger.info(mqtt_message["topic"])
                 pass
 
     # if the dict key is just the topic with a different sep

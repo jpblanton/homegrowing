@@ -1,5 +1,9 @@
 tests!!!!!
 
+1/12: mosquitto seems to be working...not sure if metric insertion is
+
+raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
+
 basic display at least 
     front page drop down (growth stage) that only superuser james can edit but everyone can view
 

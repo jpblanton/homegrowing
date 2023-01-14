@@ -9,5 +9,8 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["current_stage"] = GrowthStageHistory.objects.latest()
+        try:
+            context["current_stage"] = GrowthStageHistory.objects.latest()
+        except:
+            context["current_stage"] = None
         return context
