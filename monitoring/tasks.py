@@ -45,6 +45,7 @@ def top_n_average(metric: str, n: int = 10) -> float:
     avg = sum(r.data for r in top) / n
     logger.info(f"Current {metric} average is {avg}")
     # should the recent average be in cache for anything else that might need it?
+    cache.set(f"{metric}-avg", avg)
     return avg
 
 
