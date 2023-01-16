@@ -212,6 +212,8 @@ MQTT_TOPIC_SUBS = [
     "tent1/DHT22-2/humidity",
     "tent1/DHT22-2/temperature",
     "tent1/humidifier/status",
+    "tent1/AHT20-1/humidity",
+    "tent1/AHT20-1/temperature",
 ]
 
 MQTT_TOPICS = {
@@ -220,19 +222,25 @@ MQTT_TOPICS = {
     "tent1_DHT22-2_humidity": "tent1/DHT22-2/humidity",
     "tent1_DHT22-2_temperature": "tent1/DHT22-2/temperature",
     "tent1_humidifier_status": "tent1/humidifier/status",
+    "tent1_AHT20-1_humidity": "tent1/AHT20-1/humidity",
+    "tent1_AHT20-1_temperature": "tent1/AHT20-1/temperature",
 }
 
 MQTT_TOPICS_DICT = {
     "tent1": {
         "DHT22-1": {
-            "humididity": "tent1/DHT22-1/humidity",
+            "humidity": "tent1/DHT22-1/humidity",
             "temperature": "tent1/DHT22-1/temperature",
         },
         "DHT22-2": {
-            "humididity": "tent1/DHT22-2/humidity",
+            "humidity": "tent1/DHT22-2/humidity",
             "temperature": "tent1/DHT22-2/temperature",
         },
         "humidifier": {"status": "tent1/humidifier/status"},
+        "AHT20-1": {
+            "humidity": "tent1/AHT20-1/humidity",
+            "temperature": "tent1/AHT20-1/temperature",
+        }
     }
 }
 

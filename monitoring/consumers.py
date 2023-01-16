@@ -28,9 +28,7 @@ class mqttConsumer(MqttConsumer):
         topic = mqtt_message["topic"]
         payload = mqtt_message["payload"]
         qos = mqtt_message["qos"]
-        message = await database_sync_to_async(
-            MQTTMessage.create(topic=topic, payload=payload, qos=qos)
-        )
+        message = await database_sync_to_async(MQTTMessage.objects.create)(topic=topic, payload=payload, qos=qos)
         match mqtt_message["topic"].split("/"):
             case [place, device, "temperature" | "humidity" as metric]:
                 await self.insert_measure(payload, place, device, metric)

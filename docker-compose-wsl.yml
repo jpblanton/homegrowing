@@ -6,9 +6,7 @@ version: "3.9"
 
 services:
   web:
-    build:
-      context: .
-      network: .
+    build: .
     command: python /code/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -21,9 +19,7 @@ services:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9"
   asgi:
-    build:
-      context: .
-      network: .
+    build: .
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
     volumes:
       - .:/code
@@ -42,9 +38,7 @@ services:
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
   celery:
-    build:
-      context: .
-      network: host
+    build: .
     command: celery --app config worker --loglevel=info
     volumes:
       - .:/code
@@ -58,9 +52,7 @@ services:
       - web
       - redis
   celery-beat:
-    build:
-      context: .
-      network: host
+    build: .
     command: celery -A config beat -l info
     volumes:
       - .:/code

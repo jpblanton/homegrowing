@@ -1,8 +1,11 @@
 tests!!!!!
 
-1/12: mosquitto seems to be working...not sure if metric insertion is
-
 raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
+look into shrinking the celery and asgi containers
+    definitely don't need all the requirements, will that shrink?
+
+!!! subfolders for fan controller/humidifier switch
+!!! should only need a few packages
 
 basic display at least 
     front page drop down (growth stage) that only superuser james can edit but everyone can view

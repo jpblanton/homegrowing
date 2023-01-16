@@ -6,6 +6,10 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# Install rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH /root/.cargo/bin:$PATH
+
 # Set work directory
 WORKDIR /code
 
