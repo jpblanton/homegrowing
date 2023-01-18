@@ -96,6 +96,6 @@ services:
     devices:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
-    command: python3 humidifier-control.py --host mqtt --gpio 5 --topic "tent1/humidifier/test"
+    command: python3 humidifier-control.py --host mqtt --pin 5 --topic "tent1/humidifier/test"
 volumes:
   postgres_data:
