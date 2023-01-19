@@ -1,7 +1,7 @@
 tests!!!!!
 
-1/18: move the growhtstagehistorycreate url out of /api/v1, probably to root
-get the form implemented in the home page
+humidifier-control couldn't connect to mqtt at first
+maybe too crowded at beginning? might need to add a waiting thing
 
 raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
 look into shrinking the celery and asgi containers
