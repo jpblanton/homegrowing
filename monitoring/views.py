@@ -1,6 +1,10 @@
 import logging
 
 from rest_framework import generics
+from django.shortcuts import reverse
+from django.views.generic.edit import CreateView
+
+from .forms import GrowthStageHistoryForm
 
 from .models import (
     SensorHost,
@@ -74,3 +78,12 @@ class GrowthStageHistoryList(generics.ListAPIView):
 class GrowthStageHistoryDetail(generics.RetrieveAPIView):
     queryset = GrowthStageHistory.objects.all()
     serializer_class = GrowthStageHistorySerializer
+
+
+class GrowthStageHistoryCreate(CreateView):
+    model = GrowthStageHistory
+    template_name = "growthstagehistorycreate.html"
+    form_class = GrowthStageHistoryForm
+
+    def get_success_url(self) -> str:
+        return reverse("home")

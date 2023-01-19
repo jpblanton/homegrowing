@@ -4,15 +4,39 @@
 {% block content %}
 <h1>This is our home page.</h1>
 <img class="potplant" src="{% static 'images/dfp.jpg' %}">
-<p>Plants are currently in {{ current_stage }}. Make a small table here I think showing the range</p>
+<p>Plants are currently in {{ current_stage }}. </p>
+<table>
+    <tr>
+        <th></th>
+        <th>Min</th>
+        <th>Max</th>
+    </tr>
+    <tr>
+        <th>Temperature</th>
+        <td>{{ current_stage.growth_stage.min_temperature }}</td>
+        <td>{{ current_stage.growth_stage.max_temperature }}</td>
+    </tr>
+    <tr>
+        <th>Humidity</th>
+        <td>{{ current_stage.growth_stage.min_humidity }}</td>
+        <td>{{ current_stage.growth_stage.max_humidity }}</td>
+    </tr>
+</table>
 <p>Rolling average temp is {{ avg_temp }}. Latest = {{ latest_temp }}</p>
 <p>Rolling average humidity is {{ avg_humidity }}. Latest = {{ latest_humidity }}</p>
 {% if user.is_authenticated %}
-<p>Hi {{ user.email }}!</p>
+<p>Hi {{ user.username }}!</p>
 <p><a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
 <p>You are not logged in</p>
 <a href="{% url 'login' %}">Log In</a>
 <a href="{% url 'signup' %}">Sign Up</a>
 {% endif %}
-{% endblock content %}
+<divclass="containermt-5">
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+    {% endblock content %}
