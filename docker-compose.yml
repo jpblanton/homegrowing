@@ -1,5 +1,6 @@
 version: "3.9"
 
+# won't add fan/humidifier controls to docker-compose-wsl since, well, not a pi
 services:
   web:
     build:
@@ -37,6 +38,8 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+    ports:
+      - "5432:5432"
   celery:
     build:
       context: .
@@ -78,12 +81,23 @@ services:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
+  # TODO: need to get the and topics from environment/config
+  # use a .env file
+  fan-control:
+    build:
+      context: ./fan-control/
+      network: host
+    devices:
+      - /dev/mem:/dev/mem
+      - /dev/gpiomem:/dev/gpiomem
+    command: python3 fan-control.py --host mqtt --gpio 12 16 --topics "tent1/fan1/test" "tent1/fan2/test"
+  humidifier-control:
+    build:
+      context: ./humidifier-control/
+      network: host
+    devices:
+      - /dev/mem:/dev/mem
+      - /dev/gpiomem:/dev/gpiomem
+    command: python3 humidifier-control.py --host mqtt --pin 5 --topic "tent1/humidifier/test"
 volumes:
   postgres_data:
-
-    # for now we'll stick to using test.mosquitto.org
-    # should figure this out
-    # using docker inspect homegrowing_mosquitto_1 to get ip address
-    # that gave 172.20.0.2 which led to connect refused
-    # might be able to use "homegrowing_mosquitto_1" or name field instead of ip --this is correct
-    # stackoverflow window open which might help & might want to change mosquitto port mappings
