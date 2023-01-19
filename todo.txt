@@ -3,14 +3,12 @@ tests!!!!!
 humidifier-control couldn't connect to mqtt at first
 maybe too crowded at beginning? might need to add a waiting thing
 
-raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
+model for devices?: location, device, name (location+device), status, last_updated
+
 look into shrinking the celery and asgi containers
     definitely don't need all the requirements, will that shrink?
 
-!!! subfolders for fan controller/humidifier switch
-!!! should only need a few packages
-
-basic display at least 
+put this under is_authenticated for now since im only user
     front page drop down (growth stage) that only superuser james can edit but everyone can view
 
 growth stages - might be worth adding a day/night time temp option
@@ -20,8 +18,6 @@ growth stages - might be worth adding a day/night time temp option
 logging
     set up done - need to put statements in code
     handling errors send over mqtt from devices
-
-figure out connection issues with local/containerized mosquitto broker
 
 adjustable temp/hum ranges
     new model (maybe one for each?) - form on the front page just like history
