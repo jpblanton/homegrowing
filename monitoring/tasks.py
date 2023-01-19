@@ -59,9 +59,9 @@ def send_update_to_discord(avg: float, metric: str) -> tuple[int, str]:
 
 @shared_task
 def adjust_climate(avg: float, metric: str):
-    current_growth_stage = GrowthStage.objects.get(
+    current_growth_stage = GrowthStageHistory.objects.get(
         pk=cache.get("current_growth_stage_pk")
-    )
+    ).growth_stage
     if metric == "humidity":
         if avg < current_growth_stage.min_humidity:
             # send message to turn on humidifier
