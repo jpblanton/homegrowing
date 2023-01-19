@@ -1,5 +1,8 @@
 tests!!!!!
 
+1/18: move the growhtstagehistorycreate url out of /api/v1, probably to root
+get the form implemented in the home page
+
 raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
 look into shrinking the celery and asgi containers
     definitely don't need all the requirements, will that shrink?
