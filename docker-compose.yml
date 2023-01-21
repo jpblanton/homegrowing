@@ -91,6 +91,9 @@ services:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
     command: python3 fan-control.py --host mqtt --gpio 12 16 --topics "tent1/fan1/test" "tent1/fan2/test"
+    depends_on:
+      - mosquitto
+      - web
   humidifier-control:
     build:
       context: ./humidifier-control/
@@ -99,5 +102,8 @@ services:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
     command: python3 humidifier-control.py --host mqtt --pin 5 --topic "tent1/humidifier/test"
+    depends_on:
+      - mosquitto
+      - web
 volumes:
   postgres_data:

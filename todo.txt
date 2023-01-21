@@ -2,6 +2,7 @@ tests!!!!!
 
 humidifier-control couldn't connect to mqtt at first
 maybe too crowded at beginning? might need to add a waiting thing
+	added depends_on to docker compose hopefully that fixes it
 
 raspberry pi branch with build: context . network: host & line to download rust & put in $PATH
 look into shrinking the celery and asgi containers
