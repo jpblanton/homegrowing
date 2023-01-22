@@ -5,7 +5,7 @@ services:
   web:
     build:
       context: .
-      network: .
+      network: host
     command: python /code/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -20,7 +20,8 @@ services:
   asgi:
     build:
       context: .
-      network: .
+      dockerfile: Dockerfile.asgi
+      network: host
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
     volumes:
       - .:/code
@@ -111,6 +112,8 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+    depends_on:
+      - db
 volumes:
   postgres_data:
   grafana_data:
