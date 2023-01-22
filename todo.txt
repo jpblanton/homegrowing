@@ -1,5 +1,8 @@
 tests!!!!!
 
+restore those scripts that monitor memory & cpu usage
+or prometheus? investigate that
+
 humidifier-control couldn't connect to mqtt at first
 maybe too crowded at beginning? might need to add a waiting thing
 	added depends_on to docker compose hopefully that fixes it
