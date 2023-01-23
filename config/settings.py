@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "rest_framework",
+    "bootstrap5",
     # local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -240,7 +241,7 @@ MQTT_TOPICS_DICT = {
         "AHT20-1": {
             "humidity": "tent1/AHT20-1/humidity",
             "temperature": "tent1/AHT20-1/temperature",
-        }
+        },
     }
 }
 
