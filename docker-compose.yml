@@ -84,25 +84,14 @@ services:
       - ./mosquitto/log:/mosquitto/log
   # TODO: need to get the and topics from environment/config
   # use a .env file
-  fan-control:
+  device-control:
     build:
-      context: ./fan-control/
+      context: ./device-controller/
       network: host
     devices:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
-    command: python3 fan-control.py --host mqtt --gpio 12 16 --topics "tent1/fan1/test" "tent1/fan2/test"
-    depends_on:
-      - mosquitto
-      - web
-  humidifier-control:
-    build:
-      context: ./humidifier-control/
-      network: host
-    devices:
-      - /dev/mem:/dev/mem
-      - /dev/gpiomem:/dev/gpiomem
-    command: python3 humidifier-control.py --host mqtt --pin 5 --topic "tent1/humidifier/test"
+    command: python3 device-controller.py --host mqtt 
     depends_on:
       - mosquitto
       - web

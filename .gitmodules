@@ -1,6 +1,3 @@
-[submodule "humidifier-control"]
-	path = humidifier-control
-	url = https://github.com/jpblanton/humidifier-control
-[submodule "fan-control"]
-	path = fan-control
-	url = https://github.com/jpblanton/fan-control
+[submodule "device-controller"]
+	path = device-controller
+	url = https://github.com/jpblanton/device-controller.git
