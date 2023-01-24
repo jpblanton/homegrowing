@@ -8,6 +8,13 @@ from monitoring.models import SensorData
 from monitoring.forms import GrowthStageHistoryForm
 
 
+def grafana_view(request):
+    # 127.0.1.1 works but only on wsl
+    # hoping localhost holds for both
+    response = redirect("http://localhost:3000")
+    return response
+
+
 class HomePageView(TemplateView):
     template_name = "home.html"
 
