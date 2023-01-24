@@ -35,18 +35,16 @@ class HomePageView(TemplateView):
 
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
-        # do we need to have a constantly updating latest cache?
-        # should definitely be a way to update this on refresh
         try:
             context["latest_temp"] = SensorData.objects.filter(
                 metric__metric__exact="temperature"
-            )[0].data
+            )[-1].data
         except:
             context["latest_temp"] = None
         try:
             context["latest_humidity"] = SensorData.objects.filter(
                 metric__metric__exact="humidity"
-            )[0].data
+            )[-1].data
         except:
             context["latest_humidity"] = None
 

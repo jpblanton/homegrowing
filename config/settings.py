@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "rest_framework",
+    "bootstrap5",
     # local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -206,14 +207,23 @@ CELERY_BEAT_SCHEDULE = {
 # custom settings variables
 # this below is what the switch signal goes on
 # "tent1/humidifier/power"
+# gotta figure out how to organize these better
+# can't be repeating the same thing 3 times
 MQTT_TOPIC_SUBS = [
     "tent1/DHT22-1/humidity",
     "tent1/DHT22-1/temperature",
     "tent1/DHT22-2/humidity",
     "tent1/DHT22-2/temperature",
     "tent1/humidifier/status",
+    "tent1/humidifier/power",
     "tent1/AHT20-1/humidity",
     "tent1/AHT20-1/temperature",
+    "tent1/fan1/status",
+    "tent1/fan2/status",
+    "tent1/fan1/power",
+    "tent1/fan2/power",
+    "tent1/lights/status",
+    "tent1/lights/lux",
 ]
 
 MQTT_TOPICS = {
@@ -222,8 +232,15 @@ MQTT_TOPICS = {
     "tent1_DHT22-2_humidity": "tent1/DHT22-2/humidity",
     "tent1_DHT22-2_temperature": "tent1/DHT22-2/temperature",
     "tent1_humidifier_status": "tent1/humidifier/status",
+    "tent1_humidifier_power": "tent1/humidifier/power",
     "tent1_AHT20-1_humidity": "tent1/AHT20-1/humidity",
     "tent1_AHT20-1_temperature": "tent1/AHT20-1/temperature",
+    "tent1_fan1_status": "tent1/fan1/status",
+    "tent1_fan2_status": "tent1/fan2/status",
+    "tent1_fan1_power": "tent1/fan1/power",
+    "tent1_fan2_power": "tent1/fan2/power",
+    "tent1_lights_status": "tent1/lights/status",
+    "tent1_lights_lux": "tent1/lights/lux",
 }
 
 MQTT_TOPICS_DICT = {
@@ -236,11 +253,26 @@ MQTT_TOPICS_DICT = {
             "humidity": "tent1/DHT22-2/humidity",
             "temperature": "tent1/DHT22-2/temperature",
         },
-        "humidifier": {"status": "tent1/humidifier/status"},
+        "humidifier": {
+            "status": "tent1/humidifier/status",
+            "power": "tent1/humidifier/power",
+        },
         "AHT20-1": {
             "humidity": "tent1/AHT20-1/humidity",
             "temperature": "tent1/AHT20-1/temperature",
-        }
+        },
+        "lights": {
+            "lux": "tent1/lights/lux",
+            "status": "tent1/lights/status",
+        },
+        "fan1": {
+            "status": "tent1/fan1/status",
+            "power": "tent1/fan1/power",
+        },
+        "fan2": {
+            "status": "tent1/fan2/status",
+            "power": "tent1/fan2/power",
+        },
     }
 }
 
