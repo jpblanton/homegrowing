@@ -1,6 +1,6 @@
 tests!!!!!
 
-migration to have on/off Status object defaults imported
+binary switch icon for device statuses on homepage
 
 restore those scripts that monitor memory & cpu usage
 or prometheus? investigate that
