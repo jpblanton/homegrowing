@@ -36,15 +36,21 @@ class HomePageView(TemplateView):
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
         try:
-            context["latest_temp"] = SensorData.objects.filter(
-                metric__metric__exact="temperature"
-            )[-1].data
+            context["latest_temp"] = (
+                SensorData.objects.filter(metric__metric__exact="temperature")
+                .order_by("created_at")
+                .last()
+                .data
+            )
         except:
             context["latest_temp"] = None
         try:
-            context["latest_humidity"] = SensorData.objects.filter(
-                metric__metric__exact="humidity"
-            )[-1].data
+            context["latest_humidity"] = (
+                SensorData.objects.filter(metric__metric__exact="humidity")
+                .order_by("created_at")
+                .last()
+                .data
+            )
         except:
             context["latest_humidity"] = None
 

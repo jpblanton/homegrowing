@@ -7,7 +7,7 @@ import django
 from django.conf import settings
 from django.db import IntegrityError
 
-from .models import SensorHost, SensorData, SensorMetric, MQTTMessage, Device, Status
+from .models import SensorHost, SensorData, SensorMetric, MQTTMessage, Device
 
 
 logger = logging.getLogger(__name__)
@@ -71,6 +71,8 @@ class mqttConsumer(MqttConsumer):
         obj, obj_created = Device.objects.update_or_create(
             name=full_name, status=status
         )
+        if obj_created:
+            logger.info("New device created: {}".format(full_name))
 
     @database_sync_to_async
     def insert_measure(
@@ -83,7 +85,7 @@ class mqttConsumer(MqttConsumer):
         host_obj, host_created = SensorHost.objects.get_or_create(host=host)
         metric_obj, metric_created = SensorMetric.objects.get_or_create(metric=metric)
         if host_created:
-            logger.info("New host created: {}".format(host_obj.host))
+            logger.info("New host created: {}".format(host))
         if metric_created:
-            logger.info("New metric created: {}".format(metric_obj.metric))
+            logger.info("New metric created: {}".format(metric))
         SensorData.objects.create(host=host_obj, metric=metric_obj, data=value)
