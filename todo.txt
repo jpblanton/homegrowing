@@ -1,5 +1,7 @@
 tests!!!!!
 
+migration to have on/off Status object defaults imported
+
 restore those scripts that monitor memory & cpu usage
 or prometheus? investigate that
 
