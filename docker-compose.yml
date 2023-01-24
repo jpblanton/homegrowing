@@ -20,7 +20,7 @@ services:
   asgi:
     build:
       context: .
-      dockerfile: Dockerfile.asgi
+      # dockerfile: Dockerfile.asgi
       network: host
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
     volumes:
