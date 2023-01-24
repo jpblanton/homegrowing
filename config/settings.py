@@ -239,8 +239,8 @@ MQTT_TOPICS = {
     "tent1_fan2_status": "tent1/fan2/status",
     "tent1_fan1_power": "tent1/fan1/power",
     "tent1_fan2_power": "tent1/fan2/power",
-    "tent1_lights_status": "tent1/lights/status",
-    "tent1_lights_lux": "tent1/lights/lux",
+    "tent1_light_status": "tent1/light/status",
+    "tent1_light_lux": "tent1/light/lux",
 }
 
 MQTT_TOPICS_DICT = {
@@ -261,9 +261,9 @@ MQTT_TOPICS_DICT = {
             "humidity": "tent1/AHT20-1/humidity",
             "temperature": "tent1/AHT20-1/temperature",
         },
-        "lights": {
-            "lux": "tent1/lights/lux",
-            "status": "tent1/lights/status",
+        "light": {
+            "lux": "tent1/light/lux",
+            "status": "tent1/light/status",
         },
         "fan1": {
             "status": "tent1/fan1/status",
