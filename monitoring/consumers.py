@@ -69,7 +69,7 @@ class mqttConsumer(MqttConsumer):
         elif payload == b"False":
             status = "off"
         obj, obj_created = Device.objects.update_or_create(
-            name=full_name, status=status
+            defaults={"status": status}, name=full_name
         )
         if obj_created:
             logger.info("New device created: {}".format(full_name))

@@ -80,7 +80,7 @@ class MQTTMessage(models.Model):
 
 
 class Device(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     status = models.CharField(max_length=64)
     updated_at = models.DateTimeField(auto_now=True)
 
