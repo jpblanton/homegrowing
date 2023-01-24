@@ -222,8 +222,8 @@ MQTT_TOPIC_SUBS = [
     "tent1/fan2/status",
     "tent1/fan1/power",
     "tent1/fan2/power",
-    "tent1/lights/status",
-    "tent1/lights/lux",
+    "tent1/light/status",
+    "tent1/light/lux",
 ]
 
 MQTT_TOPICS = {
@@ -239,8 +239,8 @@ MQTT_TOPICS = {
     "tent1_fan2_status": "tent1/fan2/status",
     "tent1_fan1_power": "tent1/fan1/power",
     "tent1_fan2_power": "tent1/fan2/power",
-    "tent1_lights_status": "tent1/lights/status",
-    "tent1_lights_lux": "tent1/lights/lux",
+    "tent1_lights_status": "tent1/light/status",
+    "tent1_lights_lux": "tent1/light/lux",
 }
 
 MQTT_TOPICS_DICT = {
@@ -262,8 +262,8 @@ MQTT_TOPICS_DICT = {
             "temperature": "tent1/AHT20-1/temperature",
         },
         "lights": {
-            "lux": "tent1/lights/lux",
-            "status": "tent1/lights/status",
+            "lux": "tent1/light/lux",
+            "status": "tent1/light/status",
         },
         "fan1": {
             "status": "tent1/fan1/status",
@@ -273,7 +273,7 @@ MQTT_TOPICS_DICT = {
             "status": "tent1/fan2/status",
             "power": "tent1/fan2/power",
         },
-}
+}}
 
 
 HUMIDIFIER_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991805750894678166/tdCOKUCjqY-dYqGDOGfNPJ7k6xPdd01W6zdzPdnZAcplC1YUa-pcZd0FgxdpkpQA9qJB"
