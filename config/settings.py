@@ -273,7 +273,8 @@ MQTT_TOPICS_DICT = {
             "status": "tent1/fan2/status",
             "power": "tent1/fan2/power",
         },
-}}
+    }
+}
 
 
 HUMIDIFIER_DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/991805750894678166/tdCOKUCjqY-dYqGDOGfNPJ7k6xPdd01W6zdzPdnZAcplC1YUa-pcZd0FgxdpkpQA9qJB"
