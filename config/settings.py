@@ -273,6 +273,7 @@ MQTT_TOPICS_DICT = {
             "status": "tent1/fan2/status",
             "power": "tent1/fan2/power",
         },
+    }
 }
 
 
