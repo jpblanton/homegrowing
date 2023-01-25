@@ -47,18 +47,14 @@ class HomePageView(TemplateView):
                 SensorData.objects.filter(metric__metric__exact="temperature")
                 .order_by("created_at")
                 .last()
-                .data
             )
-        except:
-            context["latest_temp"] = None
-        try:
             context["latest_humidity"] = (
                 SensorData.objects.filter(metric__metric__exact="humidity")
                 .order_by("created_at")
                 .last()
-                .data
             )
-        except:
+        except SensorData.DoesNotExist:
+            context["latest_temp"] = None
             context["latest_humidity"] = None
 
         return context
