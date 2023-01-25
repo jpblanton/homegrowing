@@ -34,10 +34,30 @@
                 </tr>
             </tbody>
         </table>
-        <p>Rolling average temp is {{ avg_temp }}. Latest = {{ latest_temp.data }}. Updated at: {{
-            latest_temp.created_at }}</p>
-        <p>Rolling average humidity is {{ avg_humidity }}. Latest = {{ latest_humidity.data }}. Updated at: {{
-            latest_humidity.created_at }}</p>
+        <table class="table table-info">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Rolling</th>
+                    <th>Current</th>
+                    <th>Latest Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Temperature</th>
+                    <td>{{ avg_temp }}</td>
+                    <td>{{ latest_temp.data }}</td>
+                    <td>{{ latest_temp.created_at }}</td>
+                </tr>
+                <tr>
+                    <th>Humidity</th>
+                    <td>{{ avg_humidity }}</td>
+                    <td>{{ latest_humidity.data }}</td>
+                    <td>{{ latest_humidity.created_at }}</td>
+                </tr>
+            </tbody>
+        </table>
         <div class="containermt-5">
             <form method="POST" action="">
                 {% csrf_token %}
