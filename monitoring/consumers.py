@@ -82,8 +82,11 @@ class mqttConsumer(MqttConsumer):
         host = "_".join([place, device])
         # info level log about host/metric creation
         # debug for each data insert
-        host_obj, host_created = SensorHost.objects.get_or_create(host=host)
-        metric_obj, metric_created = SensorMetric.objects.get_or_create(metric=metric)
+        try:
+            host_obj, host_created = SensorHost.objects.get_or_create(host=host)
+            metric_obj, metric_created = SensorMetric.objects.get_or_create(metric=metric)
+        except: # list out exceptions here?
+            logger.exception("Exception occurred trying to create: host: {}; metric: {}".format(host, metric))
         if host_created:
             logger.info("New host created: {}".format(host))
         if metric_created:
