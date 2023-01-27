@@ -151,6 +151,7 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+# consider migrating to RotatingFileHandler or Timed...
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -191,6 +192,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
 
+# TODO: add tasks to compare device status with pin info/lux level (depending)
 CELERY_BEAT_SCHEDULE = {
     "humidity_rolling_avg": {
         "task": "monitoring.tasks.climate_monitoring",
