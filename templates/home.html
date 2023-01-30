@@ -72,12 +72,19 @@
     </div>
     <div class="col-sm-6">
         <p>Device status can go here</p>
-	<div class="form-check form-switch">
-	    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-	    <label class="form-check-label" for="flexSwitchCheckChecked">Fan 1 Power</label>
-	</div>
-	<div class="col" id="tmp-container">
-	</div>
+        <div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" name="fan1" id="flexSwitchCheckChecked" hx-post="{% url 'fans' %}" hx-target="#tmp-container" hx-include="[name^='fan']" {% if fan1.status == 'on' %} checked {% endif %}>
+            <label class="form-check-label" for="flexSwitchCheckChecked">Fan 1 Power</label>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="fan2" id="flexSwitchCheckChecked" hx-post="{% url 'fans' %}" hx-target="#tmp-container" hx-include="[name^='fan']" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked">Fan 2 Power</label>
+        </div>
+        <div class="col" id="tmp-container">
+		{{ fan1 }}
+            {% block fans %}
+            {% endblock fans %}
+        </div>
     </div>
 </div>
 {% else %}

@@ -21,6 +21,7 @@ class mqttConsumer(MqttConsumer):
         subs = [self.subscribe(t, 2) for t in settings.MQTT_TOPICS.values()]
         await asyncio.wait(subs)
         await self.channel_layer.group_add("humidifier.group", self.channel_name)
+        await self.channel_layer.group_add("fan.group", self.channel_name)
 
     async def receive(self, mqtt_message: dict) -> None:
         # should we create a table to log all messages topic/payload/qos?
@@ -56,6 +57,9 @@ class mqttConsumer(MqttConsumer):
             settings.MQTT_TOPICS["tent1_humidifier_status"], event["body"]
         )
 
+    async def fan_switch(self, event):
+        await self.publish("test/test", "12345")
+
     async def disconnect(self) -> None:
         # confirm this field
         unsubs = [self.unsubscribe(t) for t in self.subscribed_topics]
@@ -84,9 +88,15 @@ class mqttConsumer(MqttConsumer):
         # debug for each data insert
         try:
             host_obj, host_created = SensorHost.objects.get_or_create(host=host)
-            metric_obj, metric_created = SensorMetric.objects.get_or_create(metric=metric)
-        except: # list out exceptions here?
-            logger.exception("Exception occurred trying to create: host: {}; metric: {}".format(host, metric))
+            metric_obj, metric_created = SensorMetric.objects.get_or_create(
+                metric=metric
+            )
+        except:  # list out exceptions here?
+            logger.exception(
+                "Exception occurred trying to create: host: {}; metric: {}".format(
+                    host, metric
+                )
+            )
         if host_created:
             logger.info("New host created: {}".format(host))
         if metric_created:

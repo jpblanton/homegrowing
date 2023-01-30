@@ -1,11 +1,17 @@
 from typing import Any
+import logging
+
 from django.shortcuts import render, reverse, redirect
 from django.views.generic import TemplateView
 from django.core.cache import cache
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from monitoring.models import GrowthStageHistory
-from monitoring.models import SensorData
+from monitoring.models import SensorData, Device
 from monitoring.forms import GrowthStageHistoryForm
+
+logger = logging.getLogger(__name__)
 
 
 def grafana_view(request):
@@ -13,6 +19,31 @@ def grafana_view(request):
     # hoping localhost holds for both
     response = redirect("http://localhost:3000")
     return response
+
+
+class FanTriggerView(TemplateView):
+    template_name = "fans.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["fan1"] = Device.objects.get(name="tent1_fan1")
+
+    def get(self, request):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+
+    # 1/30/23: with the hx-include it sends a dict of the fans
+    # but only includes them if they're 'on'
+    # hopefully we can improve that but for now that's the way it works
+    def post(self, request):
+        logger.info(request.POST)
+        fan1 = request.POST.get('fan1', 'off')
+        fan2 = request.POST.get('fan2', 'off')
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "fan.group", {"type": "fan.switch", "body": {"num": 1, "value": False}}
+        )
+        return redirect("fans")
 
 
 class HomePageView(TemplateView):
@@ -40,6 +71,8 @@ class HomePageView(TemplateView):
         except:
             context["current_stage"] = None
 
+        context['fan1'] = Device.objects.get(name='tent1_fan1')
+        # context['fans'] = Device.objects.filter(category='fan')
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
         try:

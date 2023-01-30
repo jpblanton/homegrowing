@@ -1,5 +1,7 @@
 tests!!!!!
 
+use templates to loop over the fans for the display instead of hardcoding two
+
 figure out how to get grafana showing in a page so we can keep the navbar
 ooh navbar should have quick icons for temp and humidity
 add sensor_view for easier access

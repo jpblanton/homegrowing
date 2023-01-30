@@ -80,6 +80,10 @@ class MQTTMessage(models.Model):
 
 
 class Device(models.Model):
+    # should add a type column for easier filtering
+    # make it optional so it's something I can tweak
+    # we'll probably have it default to the name
+    # with numbers stripped but it should be editable
     name = models.CharField(max_length=128, unique=True)
     status = models.CharField(max_length=64)
     updated_at = models.DateTimeField(auto_now=True)
