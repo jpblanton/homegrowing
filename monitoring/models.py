@@ -86,6 +86,7 @@ class Device(models.Model):
     # with numbers stripped but it should be editable
     name = models.CharField(max_length=128, unique=True)
     status = models.CharField(max_length=64)
+    category = models.CharField(max_length=64, null=False, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
