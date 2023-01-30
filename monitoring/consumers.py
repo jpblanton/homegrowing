@@ -58,7 +58,10 @@ class mqttConsumer(MqttConsumer):
         )
 
     async def fan_switch(self, event):
-        await self.publish("test/test", "12345")
+        device_name = event["body"]["device"]
+        topic = settings.MQTT_TOPICS[f"{device_name}_status"]
+        logger.info(topic)
+        await self.publish(topic, event["body"]["value"])
 
     async def disconnect(self) -> None:
         # confirm this field

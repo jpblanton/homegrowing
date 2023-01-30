@@ -26,7 +26,9 @@ class FanTriggerView(TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["fan1"] = Device.objects.get(name="tent1_fan1")
+        context["fans"] = Device.objects.filter(category="fan")
+        context["keys"] = "+".join(context.keys())
+        return context
 
     def get(self, request):
         context = self.get_context_data()
@@ -36,12 +38,24 @@ class FanTriggerView(TemplateView):
     # but only includes them if they're 'on'
     # hopefully we can improve that but for now that's the way it works
     def post(self, request):
-        logger.info(request.POST)
-        fan1 = request.POST.get('fan1', 'off')
-        fan2 = request.POST.get('fan2', 'off')
+        device_name = request.headers.get(
+            "Hx-Trigger-Name", "Error: Missing Trigger Name"
+        )
+        power = None
+        match len(request.POST):
+            case 1:
+                power = True
+            case 0:
+                power = False
+            case _:
+                # this means something is wrong
+                logger.exception(vars(request))
+                power = None
+                return redirect("fans")
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            "fan.group", {"type": "fan.switch", "body": {"num": 1, "value": False}}
+            "fan.group",
+            {"type": "fan.switch", "body": {"device": device_name, "value": power}},
         )
         return redirect("fans")
 
@@ -71,8 +85,7 @@ class HomePageView(TemplateView):
         except:
             context["current_stage"] = None
 
-        context['fan1'] = Device.objects.get(name='tent1_fan1')
-        # context['fans'] = Device.objects.filter(category='fan')
+        context["fans"] = Device.objects.filter(category="fan")
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
         try:
