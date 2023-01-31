@@ -25,6 +25,6 @@ application = ProtocolTypeRouter(
         "http": django_asgi_app,
         # mqtt handler
         "mqtt": mqttConsumer.as_asgi(),
-        'websocket': URLRouter([path('practice', StreamConsumer.as_asgi())])
+        'websocket': URLRouter([path('practice/', StreamConsumer.as_asgi())])
     }
 
