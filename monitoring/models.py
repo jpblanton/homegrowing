@@ -1,7 +1,11 @@
 import uuid
+import string
+from datetime import datetime
 
 from django.db import models
 from django.core.cache import cache
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 
 
 class SensorData(models.Model):
@@ -47,9 +51,26 @@ class GrowthStage(models.Model):
     max_humidity = models.FloatField()
     min_temperature = models.FloatField()
     max_temperature = models.FloatField()
+    light_hours = models.PositiveIntegerField(validators=[MaxValueValidator(24)])
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
+
+    # important to note this will only work in the admin form
+    def clean(self) -> None:
+        dt_start = datetime.combine(datetime.today(), self.start_time)
+        dt_end = datetime.combine(datetime.today(), self.end_time)
+        timediff = dt_end - dt_start
+        # constant for seconds in an hour?
+        hourdiff = timediff.seconds / 3600
+        if hourdiff != self.light_hours:
+            raise ValidationError(
+                "Start and end times must match duration in light_hours. Calculated duration is {} hours".format(
+                    hourdiff
+                )
+            )
 
 
 class GrowthStageHistory(models.Model):
@@ -91,3 +112,8 @@ class Device(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def save(self, *args, **kwargs) -> None:
+        if self.category == "":
+            self.category = self.name.split("_")[-1].rstrip(string.digits)
+        super().save(*args, **kwargs)
