@@ -53,6 +53,7 @@ def top_n_average(metric: str, n: int = 10) -> float:
 def send_update_to_discord(avg: float, metric: str) -> tuple[int, str]:
     webhook_url = getattr(settings, f"{metric.upper()}_DISCORD_WEBHOOK_URL", None)
     data = {"content": f"Current {metric} average is {avg}"}
+    logger.info('discord URL: {}; data: {}'.format(webhook_url, str(data))
     response = requests.post(url=webhook_url, json=data)
     return response.status_code, webhook_url
 
