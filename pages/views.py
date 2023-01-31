@@ -89,6 +89,11 @@ class HomePageView(TemplateView):
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
         try:
+            context["avg_temp"] = round(context["avg_temp"], 3)
+            context["avg_humidity"] = round(context["avg_humidity"], 3)
+        except TypeError:
+            pass
+        try:
             context["latest_temp"] = (
                 SensorData.objects.filter(metric__metric__exact="temperature")
                 .order_by("created_at")
