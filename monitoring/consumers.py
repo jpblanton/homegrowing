@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 
 from mqttasgi.consumers import MqttConsumer
@@ -6,11 +7,21 @@ from channels.db import database_sync_to_async
 import django
 from django.conf import settings
 from django.db import IntegrityError
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 from .models import SensorHost, SensorData, SensorMetric, MQTTMessage, Device
 
 
 logger = logging.getLogger(__name__)
+
+
+class StreamConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+
+    async def receive(self, text_data=None, bytes_data=None, **kwargs):
+        if text_data == "PING":
+            await self.send("PONG")
 
 
 class mqttConsumer(MqttConsumer):
