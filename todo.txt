@@ -1,6 +1,6 @@
 tests!!!!!
 
-use templates to loop over the fans for the display instead of hardcoding two
+can also have camera take a picture every 30 seconds and transfer that to server
 
 figure out how to get grafana showing in a page so we can keep the navbar
 ooh navbar should have quick icons for temp and humidity
