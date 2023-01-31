@@ -14,8 +14,8 @@ ENV PATH /root/.cargo/bin:$PATH
 WORKDIR /code
 
 # Install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+COPY ./requirements-min.txt .
+RUN pip install -r requirements-min.txt
 
 # Copy project
 COPY . .

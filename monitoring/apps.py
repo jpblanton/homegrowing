@@ -9,6 +9,8 @@ class MonitoringConfig(AppConfig):
     def ready(self):
         cache.set("growth_stage_changed", False, None)
         from .models import GrowthStageHistory
+        # implicitly connect all signal handlers with @receiver
+        from . import signals
 
         current_growth_stage = GrowthStageHistory.objects.latest("created_at")
         cache.set("current_growth_stage_pk", current_growth_stage.pk, None)

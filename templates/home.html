@@ -15,8 +15,32 @@
     <div class="col-sm-6">
         <table class="table table-info">
             <thead>
-                <tr>
+                <tr class="table-primary">
                     <th></th>
+                    <th>Rolling</th>
+                    <th>Current</th>
+                    <th>Latest Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Temperature</th>
+		    <td {% if temp_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>{{ avg_temp }}</td>
+                    <td>{{ latest_temp.data }}</td>
+                    <td>{{ latest_temp.created_at }}</td>
+                </tr>
+                <tr>
+                    <th>Humidity</th>
+		    <td {% if humidity_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>{{ avg_humidity }}</td>
+                    <td>{{ latest_humidity.data }}</td>
+                    <td>{{ latest_humidity.created_at }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-info">
+            <thead>
+                <tr>
+			<th>{{ current_stage }} ranges</th>
                     <th>Min</th>
                     <th>Max</th>
                 </tr>
@@ -34,30 +58,6 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table table-info">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Rolling</th>
-                    <th>Current</th>
-                    <th>Latest Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Temperature</th>
-                    <td>{{ avg_temp }}</td>
-                    <td>{{ latest_temp.data }}</td>
-                    <td>{{ latest_temp.created_at }}</td>
-                </tr>
-                <tr>
-                    <th>Humidity</th>
-                    <td>{{ avg_humidity }}</td>
-                    <td>{{ latest_humidity.data }}</td>
-                    <td>{{ latest_humidity.created_at }}</td>
-                </tr>
-            </tbody>
-        </table>
         <div class="containermt-5">
             <form method="POST" action="">
                 {% csrf_token %}
@@ -71,10 +71,9 @@
         </div>
     </div>
     <div class="col-sm-6">
-        {% for fan in fans reversed %}
+        {% for fan in fans|dictsort:"name" %}
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" name="{{ fan.name }}" id="flexSwitchCheckChecked"
-                hx-post="{% url 'fans' %}" hx-target="#tmp-container" hx-vals='{"name": {{ fan.name }}}' checked>
+		<input class="form-check-input" type="checkbox" name="{{ fan.name }}" id="flexSwitchCheckChecked" hx-post="{% url 'fans' %}" hx-target="#tmp-container" hx-vals='{"name": {{ fan.name }}}' {% if fan.status == 'on' %} checked {% endif %}>
             <label class="form-check-label" for="flexSwitchCheckChecked">{{ fan.name }} Power</label>
         </div>
         {% endfor %}

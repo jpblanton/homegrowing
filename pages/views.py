@@ -88,6 +88,18 @@ class HomePageView(TemplateView):
         context["fans"] = Device.objects.filter(category="fan")
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
+        if context['avg_temp'] is not None:
+             context['avg_temp'] = round(context['avg_temp'], 3)
+        if context['avg_humidity'] is not None:
+             context['avg_humidity'] = round(context['avg_humidity'], 3)
+        try:
+            context['temp_ok'] = (context['avg_temp'] < context['current_stage'].growth_stage.max_temperature and context['avg_temp'] > context['current_stage'].growth_stage.min_temperature)
+        except TypeError:
+            context['temp_ok'] = None
+        try:
+            context['humidity_ok'] = (context['avg_humidity'] < context['current_stage'].growth_stage.max_humidity and context['avg_humidity'] > context['current_stage'].growth_stage.min_humidity)
+        except TypeError:
+            context['humidity_ok'] = None
         try:
             context["latest_temp"] = (
                 SensorData.objects.filter(metric__metric__exact="temperature")

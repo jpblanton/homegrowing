@@ -1,35 +1,27 @@
 tests!!!!!
 
-use templates to loop over the fans for the display instead of hardcoding two
+fan2 doesn't seem to be working but fan1 is good
+maybe it would be "better" for the fans View to update the status in the db
+and then have a post-save signal to send the mqtt message
 
 figure out how to get grafana showing in a page so we can keep the navbar
 ooh navbar should have quick icons for temp and humidity
 add sensor_view for easier access
 
-binary switch icon for device statuses on homepage
 
 restore those scripts that monitor memory & cpu usage
 or prometheus? investigate that
 
-humidifier-control couldn't connect to mqtt at first
-maybe too crowded at beginning? might need to add a waiting thing
-	added depends_on to docker compose hopefully that fixes it
 
-model for devices?: location, device, name (location+device), status, last_updated
 
 look into shrinking the celery and asgi containers
     definitely don't need all the requirements, will that shrink?
 
-put this under is_authenticated for now since im only user
-    front page drop down (growth stage) that only superuser james can edit but everyone can view
 
 growth stages - might be worth adding a day/night time temp option
     have to track when the lights are on/off and what time it is
     growth stage would also need to track the lighting option (18/6 or 12/12)
 
-logging
-    set up done - need to put statements in code
-    handling errors send over mqtt from devices
 
 adjustable temp/hum ranges
     new model (maybe one for each?) - form on the front page just like history
