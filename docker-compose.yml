@@ -5,8 +5,9 @@ services:
   web:
     build:
       context: .
-      network: host
     command: python /code/manage.py runserver 0.0.0.0:8000
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     ports:
@@ -21,7 +22,8 @@ services:
     build:
       context: .
       # dockerfile: Dockerfile.asgi
-      network: host
+    networks:
+      - homegrowing
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
     volumes:
       - .:/code
@@ -35,6 +37,8 @@ services:
       - "DJANGO_SECRET_KEY"
   db:
     image: postgres:13
+    networks:
+      - homegrowing
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -44,8 +48,9 @@ services:
   celery:
     build:
       context: .
-      network: host
     command: celery --app config worker --loglevel=info
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     environment:
@@ -60,8 +65,9 @@ services:
   celery-beat:
     build:
       context: .
-      network: host
     command: celery -A config beat -l info
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     environment:
@@ -72,9 +78,13 @@ services:
       - redis
   redis:
     image: redis:6-alpine
+    networks:
+        - homegrowing
   mosquitto:
     container_name: mqtt
     image: eclipse-mosquitto
+    networks:
+      - homegrowing
     ports:
       - "1883:1883"
       - "9001:9001"
@@ -87,11 +97,14 @@ services:
   device-control:
     build:
       context: ./device-controller/
-      network: host
     devices:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
     command: python3 device-controller.py --host mqtt
+    networks:
+      - homegrowing
+    profiles:
+      - devices
     depends_on:
       - mosquitto
       - web
@@ -99,6 +112,8 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    networks:
+        - homegrowing
     volumes:
       - grafana_data:/var/lib/grafana
       - ./defaults.ini:/usr/share/grafana/conf/defaults.ini
@@ -107,3 +122,6 @@ services:
 volumes:
   postgres_data:
   grafana_data:
+networks:
+  homegrowing:
+    driver: bridge
