@@ -81,7 +81,8 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         try:
-            context["current_stage"] = GrowthStageHistory.objects.latest()
+            current_stage = GrowthStageHistory.objects.latest()
+            context["current_stage"] = current_stage
         except:
             context["current_stage"] = None
 
@@ -92,7 +93,20 @@ class HomePageView(TemplateView):
             context["avg_temp"] = round(context["avg_temp"], 3)
             context["avg_humidity"] = round(context["avg_humidity"], 3)
         except TypeError:
+            context["temp_ok"] = False
+            context["humidity_ok"] = False
             pass
+        else:
+            context["temp_ok"] = (
+                current_stage.growth_stage.min_temperature
+                < context["avg_temp"]
+                < current_stage.growth_stage.max_temperature
+            )
+            context["humidity_ok"] = (
+                current_stage.growth_stage.min_humidity
+                < context["avg_humidity"]
+                < current_stage.growth_stage.max_humidity
+            )
         try:
             context["latest_temp"] = (
                 SensorData.objects.filter(metric__metric__exact="temperature")

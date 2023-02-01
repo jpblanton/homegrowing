@@ -17,6 +17,35 @@
             <thead>
                 <tr>
                     <th></th>
+                    <th>Rolling</th>
+                    <th>Current</th>
+                    <th>Latest Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Temperature</th>
+                    <td {% if temp_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>{{ avg_temp }}</td>
+                    <td {% if temp_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>
+                        {{ latest_temp.data }}</td>
+                    <td {% if temp_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>
+                        {{ latest_temp.created_at }}</td>
+                </tr>
+                <tr>
+                    <th>Humidity</th>
+                    <td {% if humidity_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>
+                        {{ avg_humidity }}</td>
+                    <td {% if humidity_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>
+                        {{ latest_humidity.data }}</td>
+                    <td {% if humidity_ok %} class="bg-success" {% else %} class="bg-danger" {% endif %}>
+                        {{ latest_humidity.created_at }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-info">
+            <thead>
+                <tr>
+                    <th></th>
                     <th>Min</th>
                     <th>Max</th>
                 </tr>
@@ -31,30 +60,6 @@
                     <th>Humidity</th>
                     <td>{{ current_stage.growth_stage.min_humidity }}</td>
                     <td>{{ current_stage.growth_stage.max_humidity }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="table table-info">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Rolling</th>
-                    <th>Current</th>
-                    <th>Latest Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Temperature</th>
-                    <td>{{ avg_temp }}</td>
-                    <td>{{ latest_temp.data }}</td>
-                    <td>{{ latest_temp.created_at }}</td>
-                </tr>
-                <tr>
-                    <th>Humidity</th>
-                    <td>{{ avg_humidity }}</td>
-                    <td>{{ latest_humidity.data }}</td>
-                    <td>{{ latest_humidity.created_at }}</td>
                 </tr>
             </tbody>
         </table>
