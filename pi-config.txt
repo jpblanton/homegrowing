@@ -1,0 +1,9 @@
+[pi4]
+dtoverlay=vc4-fkms-v3d
+gpu_mem=128
+
+#set 12 and 16 as outputs set to 1 for fan control
+gpio=12,16=op,dh
+
+#set 5 as output set to 0 for humidifier
+gpio=5=op,dl
