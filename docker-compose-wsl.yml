@@ -17,7 +17,7 @@ services:
       - redis
     environment:
       - "DJANGO_DEBUG=True"
-      - "DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9"
+      - "DJANGO_SECRET_KEY"
   asgi:
     build: .
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
@@ -30,7 +30,7 @@ services:
       - mosquitto
     environment:
       - "DJANGO_DEBUG=True"
-      - "DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9"
+      - "DJANGO_SECRET_KEY"
   db:
     image: postgres:13
     volumes:
@@ -44,7 +44,7 @@ services:
       - .:/code
     environment:
       - DEBUG=1
-      - DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_SECRET_KEY
       - DJANGO_ALLOWED_HOSTS=* #localhost 127.0.0.1 [::1]
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
@@ -58,7 +58,7 @@ services:
       - .:/code
     environment:
       - DEBUG=1
-      - DJANGO_SECRET_KEY=django-insecure-=j2$$0qjfv%!43rml&l7k2luuy5n-7+%@h1w20z#c2y)5z4e7^9
+      - DJANGO_SECRET_KEY
       - DJANGO_ALLOWED_HOSTS=* #localhost 127.0.0.1 [::1]
     depends_on:
       - redis
