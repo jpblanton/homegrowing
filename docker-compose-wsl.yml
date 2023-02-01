@@ -8,6 +8,8 @@ services:
   web:
     build: .
     command: python /code/manage.py runserver 0.0.0.0:8000
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     ports:
@@ -21,6 +23,8 @@ services:
   asgi:
     build: .
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     depends_on:
@@ -35,11 +39,15 @@ services:
     image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - homegrowing
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
   celery:
     build: .
     command: celery --app config worker --loglevel=info
+    networks:
+      - homegrowing
     volumes:
       - .:/code
     environment:
@@ -56,6 +64,8 @@ services:
     command: celery -A config beat -l info
     volumes:
       - .:/code
+    networks:
+      - homegrowing
     environment:
       - DEBUG=1
       - DJANGO_SECRET_KEY
@@ -64,9 +74,13 @@ services:
       - redis
   redis:
     image: redis:6-alpine
+    networks:
+      - homegrowing
   mosquitto:
     container_name: mqtt
     image: eclipse-mosquitto
+    networks:
+      - homegrowing
     ports:
       - "1883:1883"
       - "9001:9001"
@@ -80,12 +94,16 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+    networks:
+      - homegrowing
     depends_on:
       - db
 volumes:
   postgres_data:
   grafana_data:
-
+networks:
+  homegrowing:
+    driver: bridge
     # for now we'll stick to using test.mosquitto.org
     # should figure this out
     # using docker inspect homegrowing_mosquitto_1 to get ip address
