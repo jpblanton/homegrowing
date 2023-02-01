@@ -1,10 +1,10 @@
 version: "3.9"
 
-# won't add fan/humidifier controls to docker-compose-wsl since, well, not a pi
 services:
   web:
     build:
       context: .
+      dockerfile: ${HG_DFILE}
     command: python /code/manage.py runserver 0.0.0.0:8000
     networks:
       - homegrowing
@@ -21,7 +21,7 @@ services:
   asgi:
     build:
       context: .
-      # dockerfile: Dockerfile.asgi
+      dockerfile: ${HG_DFILE}
     networks:
       - homegrowing
     command: mqttasgi -H mqtt -p 1883 config.asgi:application
@@ -48,6 +48,7 @@ services:
   celery:
     build:
       context: .
+      dockerfile: ${HG_DFILE}
     command: celery --app config worker --loglevel=info
     networks:
       - homegrowing
@@ -65,6 +66,7 @@ services:
   celery-beat:
     build:
       context: .
+      dockerfile: ${HG_DFILE}
     command: celery -A config beat -l info
     networks:
       - homegrowing
@@ -79,7 +81,7 @@ services:
   redis:
     image: redis:6-alpine
     networks:
-        - homegrowing
+      - homegrowing
   mosquitto:
     container_name: mqtt
     image: eclipse-mosquitto
@@ -92,8 +94,7 @@ services:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
-  # TODO: need to get the and topics from environment/config
-  # use a .env file
+  # probably need to map the config file for this service
   device-control:
     build:
       context: ./device-controller/
@@ -113,7 +114,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-        - homegrowing
+      - homegrowing
     volumes:
       - grafana_data:/var/lib/grafana
       - ./defaults.ini:/usr/share/grafana/conf/defaults.ini
