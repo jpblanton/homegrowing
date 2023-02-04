@@ -83,7 +83,6 @@ services:
     networks:
       - homegrowing
   mosquitto:
-    container_name: mqtt
     image: eclipse-mosquitto
     networks:
       - homegrowing
