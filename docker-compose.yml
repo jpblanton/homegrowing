@@ -18,13 +18,14 @@ services:
     environment:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY"
+      - "CELERY_BROKER_URL"
   asgi:
     build:
       context: .
       dockerfile: ${HG_DFILE}
     networks:
       - homegrowing
-    command: mqttasgi -H mqtt -p 1883 config.asgi:application
+    command: mqttasgi -H 192.168.1.210 -p 1883 config.asgi:application
     volumes:
       - .:/code
     depends_on:
@@ -35,6 +36,7 @@ services:
     environment:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY"
+      - "CELERY_BROKER_URL"
   db:
     image: postgres:13
     networks:
@@ -57,9 +59,8 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SECRET_KEY
-      - DJANGO_ALLOWED_HOSTS=* #localhost 127.0.0.1 [::1]
-      - CELERY_BROKER=redis://redis:6379/0
-      - CELERY_BACKEND=redis://redis:6379/0
+      - DJANGO_ALLOWED_HOSTS
+      - CELERY_BROKER
     depends_on:
       - web
       - redis
@@ -75,7 +76,8 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SECRET_KEY
-      - DJANGO_ALLOWED_HOSTS=* #localhost 127.0.0.1 [::1]
+      - DJANGO_ALLOWED_HOSTS
+      - "CELERY_BROKER_URL"
     depends_on:
       - redis
   redis:

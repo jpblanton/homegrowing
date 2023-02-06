@@ -1,6 +1,7 @@
 tests!!!!!
 
-use templates to loop over the fans for the display instead of hardcoding two
+put something in cleanup for device to send out status update
+    this way it should only run when I change it in admin panel and not when changed normally
 
 figure out how to get grafana showing in a page so we can keep the navbar
 ooh navbar should have quick icons for temp and humidity
