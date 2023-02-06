@@ -54,12 +54,12 @@ class mqttConsumer(MqttConsumer):
     # nested dict
     async def humidifier_switch(self, event):
         await self.publish(
-            settings.MQTT_TOPICS["tent1_humidifier_status"], event["body"]
+            settings.MQTT_TOPICS["tent1_humidifier_power"], event["body"]
         )
 
     async def fan_switch(self, event):
         device_name = event["body"]["device"]
-        topic = settings.MQTT_TOPICS[f"{device_name}_status"]
+        topic = settings.MQTT_TOPICS[f"{device_name}_power"]
         logger.info(topic)
         await self.publish(topic, event["body"]["value"])
 

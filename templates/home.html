@@ -76,6 +76,7 @@
         </div>
     </div>
     <div class="col-sm-6">
+    	<p>Humidifier status: {{ humidifier.0.status }}</p>
         {% for fan in fans reversed %}
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" name="{{ fan.name }}" id="flexSwitchCheckChecked"

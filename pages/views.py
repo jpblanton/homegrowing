@@ -86,6 +86,7 @@ class HomePageView(TemplateView):
         except:
             context["current_stage"] = None
 
+        context["humidifier"] = Device.objects.filter(category="humidifier")
         context["fans"] = Device.objects.filter(category="fan")
         context["avg_temp"] = cache.get("temperature-avg", None)
         context["avg_humidity"] = cache.get("humidity-avg", None)
