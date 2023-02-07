@@ -60,6 +60,7 @@ def send_update_to_discord(avg: float, metric: str) -> tuple[int, str]:
 
 @shared_task
 def adjust_climate(avg: float, metric: str):
+    # consider adding a return statement
     current_growth_stage = GrowthStageHistory.objects.get(
         pk=cache.get("current_growth_stage_pk")
     ).growth_stage
@@ -82,7 +83,7 @@ def adjust_climate(avg: float, metric: str):
             )
     elif metric == "temperature":
         if avg < current_growth_stage.min_temperature:
-            # turn on fans? idk
+            # turn on heater
             pass
         elif avg > current_growth_stage.max_temperature:
             # turn off fans? idk
