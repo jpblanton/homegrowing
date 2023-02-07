@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "rest_framework",
     "bootstrap5",
+    "django_celery_beat",
+    "django_celery_results",
     # local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -190,21 +192,24 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # new
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BACKEND = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
 # TODO: add tasks to compare device status with pin info/lux level (depending)
-CELERY_BEAT_SCHEDULE = {
-    "humidity_rolling_avg": {
-        "task": "monitoring.tasks.climate_monitoring",
-        "schedule": crontab(minute="*/1"),
-        "args": ("humidity",),
-    },
-    "temperature_rolling_avg": {
-        "task": "monitoring.tasks.climate_monitoring",
-        "schedule": crontab(minute="*/1"),
-        "args": ("temperature",),
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "humidity_rolling_avg": {
+#         "task": "monitoring.tasks.climate_monitoring",
+#         "schedule": crontab(minute="*/1"),
+#         "args": ("humidity",),
+#     },
+#     "temperature_rolling_avg": {
+#         "task": "monitoring.tasks.climate_monitoring",
+#         "schedule": crontab(minute="*/1"),
+#         "args": ("temperature",),
+#     },
+# }
 
 # custom settings variables
 # this below is what the switch signal goes on
