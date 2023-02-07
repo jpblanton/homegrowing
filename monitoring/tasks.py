@@ -53,7 +53,7 @@ def top_n_average(metric: str, n: int = 10) -> float:
 def send_update_to_discord(avg: float, metric: str) -> tuple[int, str]:
     webhook_url = getattr(settings, f"{metric.upper()}_DISCORD_WEBHOOK_URL", None)
     data = {"content": f"Current {metric} average is {avg}"}
-    logger.info('discord URL: {}; data: {}'.format(webhook_url, str(data)))
+    logger.info("discord URL: {}; data: {}".format(webhook_url, str(data)))
     response = requests.post(url=webhook_url, json=data)
     return response.status_code, webhook_url
 
@@ -66,11 +66,6 @@ def adjust_climate(avg: float, metric: str):
     ).growth_stage
     if metric == "humidity":
         if avg < current_growth_stage.min_humidity:
-            # send message to turn on humidifier
-            # would this make sense as a websocket?
-            # might be nice to have arduino say yes I did it
-            # but that could still be wrong and if arduino
-            # gets message but can't flip one bit...not good
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "humidifier.group", {"type": "humidifier.switch", "body": True}
