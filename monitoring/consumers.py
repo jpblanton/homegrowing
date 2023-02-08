@@ -22,6 +22,7 @@ class mqttConsumer(MqttConsumer):
         await asyncio.wait(subs)
         await self.channel_layer.group_add("humidifier.group", self.channel_name)
         await self.channel_layer.group_add("fan.group", self.channel_name)
+        await self.channel_layer.group_add("heater.group", self.channel_name)
 
     async def receive(self, mqtt_message: dict) -> None:
         # should we create a table to log all messages topic/payload/qos?
@@ -62,6 +63,9 @@ class mqttConsumer(MqttConsumer):
         topic = settings.MQTT_TOPICS[f"{device_name}_power"]
         logger.info(topic)
         await self.publish(topic, event["body"]["value"])
+
+    async def heater_switch(self, event):
+        await self.publish(settings.MQTT_TOPICS["tent1_heater_power"], event["body"])
 
     async def disconnect(self) -> None:
         # confirm this field

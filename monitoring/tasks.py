@@ -77,12 +77,18 @@ def adjust_climate(avg: float, metric: str):
                 "humidifier.group", {"type": "humidifier.switch", "body": False}
             )
     elif metric == "temperature":
+        # want to add a check here to make sure it's on before sending off signal
+        mid_temp = (current_growth_stage.min_temperature + current_growth_stage.max_temperature) / 2
         if avg < current_growth_stage.min_temperature:
-            # turn on heater
-            pass
-        elif avg > current_growth_stage.max_temperature:
-            # turn off fans? idk
-            pass
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "heater.group", {"type": "heater.switch", "body": True}
+            )
+        elif avg > mid_temp:
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "heater.group", {"type": "heater.switch", "body": False}
+            )
     logger.info("climate adjust function finished")
     # this will possibly return something even if it's
     # an awaitable reference to the mqtt response

@@ -231,6 +231,8 @@ MQTT_TOPIC_SUBS = [
     "tent1/fan2/power",
     "tent1/light/status",
     "tent1/light/lux",
+    "tent1/heater/power",
+    "tent1/heater/status",
 ]
 
 MQTT_TOPICS = {
@@ -248,6 +250,8 @@ MQTT_TOPICS = {
     "tent1_fan2_power": "tent1/fan2/power",
     "tent1_light_status": "tent1/light/status",
     "tent1_light_lux": "tent1/light/lux",
+    "tent1_heater_power": "tent1/heater/power",
+    "tent1_heater_status": "tent1/heater/status",
 }
 
 MQTT_TOPICS_DICT = {
@@ -279,6 +283,10 @@ MQTT_TOPICS_DICT = {
         "fan2": {
             "status": "tent1/fan2/status",
             "power": "tent1/fan2/power",
+        },
+        "heater": {
+            "status": "tent1/heater/status",
+            "power": "tent1/heater/power",
         },
     }
 }
