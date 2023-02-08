@@ -76,7 +76,7 @@
         </div>
     </div>
     <div class="col-sm-6">
-    	<p>Humidifier status: {{ humidifier.0.status }}</p>
+        <p>Humidifier status: {{ humidifier.0.status }}</p>
         {% for fan in fans reversed %}
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" name="{{ fan.name }}" id="flexSwitchCheckChecked"
@@ -86,8 +86,14 @@
         {% endfor %}
         <div class="col" id="tmp-container">
         </div>
-	<iframe src="http://192.168.1.183:3000/d-solo/l4dWdDggz/main-dashboard?orgId=1&panelId=2" width="450" height="200" frameborder="0"></iframe>
-	<iframe src="http://192.168.1.183:3000/d-solo/l4dWdDggz/main-dashboard?orgId=1&panelId=4" width="450" height="200" frameborder="0"></iframe>
+        <iframe src="http://192.168.1.183:3000/d-solo/l4dWdDggz/main-dashboard?orgId=1&panelId=2" id="frame1"
+            width="450" height="200" frameborder="0"></iframe>
+        <iframe src="http://192.168.1.183:3000/d-solo/l4dWdDggz/main-dashboard?orgId=1&panelId=4" id="frame2"
+            width="450" height="200" frameborder="0"></iframe>
+        <script>function changeLink(_id) {
+                const element = document.getElementById(_id);
+                element.src = element.src.replace(/\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}/, window.location.hostname);
+            }; changeLink("frame1"); changeLink("frame2");</script>
     </div>
 </div>
 {% else %}

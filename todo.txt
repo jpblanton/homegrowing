@@ -1,5 +1,11 @@
 tests!!!!!
 
+get heater set up and add topics
+add migration for two main periodic tasks
+    last celery_beat migration: 0016_alter_crontabschedule_timezone.py
+    last celery_results migration: 0011_taskresult_periodic_task_name.py
+kinda nervous about this one
+
 put something in cleanup for device to send out status update
     this way it should only run when I change it in admin panel and not when changed normally
 
@@ -7,14 +13,10 @@ figure out how to get grafana showing in a page so we can keep the navbar
 ooh navbar should have quick icons for temp and humidity
 add sensor_view for easier access
 
-binary switch icon for device statuses on homepage
 
 restore those scripts that monitor memory & cpu usage
 or prometheus? investigate that
 
-humidifier-control couldn't connect to mqtt at first
-maybe too crowded at beginning? might need to add a waiting thing
-	added depends_on to docker compose hopefully that fixes it
 
 model for devices?: location, device, name (location+device), status, last_updated
 

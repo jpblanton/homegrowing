@@ -21,6 +21,7 @@ class SensorData(models.Model):
     # class Meta:
     #    get_latest_by = "created_at"
 
+
 class SensorHost(models.Model):
     # want to have the whole host, room_device, as well as fields for both
     # not perfectly normalized but whatever
@@ -119,3 +120,15 @@ class Device(models.Model):
         if self.category == "":
             self.category = self.name.split("_")[-1].rstrip(string.digits)
         super().save(*args, **kwargs)
+
+
+class SensorDataView(models.Model):
+    data_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    host = models.CharField(max_length=255)
+    metric = models.CharField(max_length=255)
+    data = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "monitoring_sensordata_view"
