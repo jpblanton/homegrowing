@@ -2,12 +2,16 @@
 
 from django.db import migrations
 
+def populate_basic_periodic_tasks(apps, schema_editor):
+    crontab = apps.get_model('django_celery_beat', 'CrontabSchedule')
+    task = apps.get_model('django_celery_beat', 'PeriodicTask')
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('monitoring', '0010_load_initial_crontabs'),
+        ('django_celery_beat', '0016_alter_crontabschedule_timezone'),
     ]
 
-    operations = [
+    operations = [migrations.RunPython(populate_basic_periodic_tasks)
     ]

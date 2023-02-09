@@ -1,5 +1,8 @@
 tests!!!!!
 
+min_temp and max_temp should be properties
+min_temp_day and min_temp_night selected by checking hour against light times
+
 get heater set up and add topics
 add migration for two main periodic tasks
     last celery_beat migration: 0016_alter_crontabschedule_timezone.py
