@@ -79,12 +79,12 @@ def adjust_climate(avg: float, metric: str):
     elif metric == "temperature":
         # want to add a check here to make sure it's on before sending off signal
         mid_temp = (current_growth_stage.min_temperature + current_growth_stage.max_temperature) / 2
-        if avg < current_growth_stage.min_temperature:
+        if avg < mid_temp:
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "heater.group", {"type": "heater.switch", "body": True}
             )
-        elif avg > mid_temp:
+        elif avg > current_growth_stage.max_temperature:
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "heater.group", {"type": "heater.switch", "body": False}
