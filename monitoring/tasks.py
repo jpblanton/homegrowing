@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from celery import shared_task, chain, group, chord
 from celery.utils.log import get_task_logger
@@ -8,7 +9,13 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
 from monitoring.consumers import mqttConsumer
-from monitoring.models import GrowthStage, GrowthStageHistory, SensorData, SensorMetric
+from monitoring.models import (
+    GrowthStage,
+    GrowthStageHistory,
+    SensorData,
+    SensorMetric,
+    SensorDataView,
+)
 
 logger = get_task_logger(__name__)
 
@@ -64,31 +71,61 @@ def adjust_climate(avg: float, metric: str):
     current_growth_stage = GrowthStageHistory.objects.get(
         pk=cache.get("current_growth_stage_pk")
     ).growth_stage
+    channel_layer = get_channel_layer()
     if metric == "humidity":
         if avg < current_growth_stage.min_humidity:
-            channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "humidifier.group", {"type": "humidifier.switch", "body": True}
             )
         elif avg > current_growth_stage.max_humidity:
             # send message to turn off humidifer
-            channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "humidifier.group", {"type": "humidifier.switch", "body": False}
             )
     elif metric == "temperature":
         # want to add a check here to make sure it's on before sending off signal
-        mid_temp = (current_growth_stage.min_temperature + current_growth_stage.max_temperature) / 2
+        mid_temp = (
+            current_growth_stage.min_temperature + current_growth_stage.max_temperature
+        ) / 2
         if avg < mid_temp:
-            channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "heater.group", {"type": "heater.switch", "body": True}
             )
         elif avg > current_growth_stage.max_temperature:
-            channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 "heater.group", {"type": "heater.switch", "body": False}
             )
     logger.info("climate adjust function finished")
     # this will possibly return something even if it's
     # an awaitable reference to the mqtt response
+
+
+@shared_task
+def check_lighting():
+    current_growth_stage = GrowthStageHistory.objects.get(
+        pk=cache.get("current_growth_stage_pk")
+    ).growth_stage
+    start = current_growth_stage.start_time
+    end = current_growth_stage.end_time
+    now = datetime.now().time()
+    # as long as the lights are on analog timer
+    # should consider making sure it's not in that
+    # 10/15 minute zone that is slightly off
+    if start < now < end:
+        day = True
+    else:
+        day = False
+    last_lux = SensorDataView.filter(metric__exact="lux").latest("created_at").data
+    channel_layer = get_channel_layer()
+    if day and last_lux < 1000:  # probably can make this higher
+        # this means light is off and should be on
+        # send error MQTT & discord messages
+        async_to_sync(channel_layer.group_send)(
+            "light.group", {"type": "light.error", "issue": "off during day"}
+        )
+    elif not day and last_lux > 500:
+        # light is on and it should be off
+        # send error messages as above
+        async_to_sync(channel_layer.group_send)(
+            "light.group", {"type": "light.error", "issue": "on at night"}
+        )

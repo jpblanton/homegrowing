@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import requests
 
 from mqttasgi.consumers import MqttConsumer
 from channels.db import database_sync_to_async
@@ -23,6 +24,7 @@ class mqttConsumer(MqttConsumer):
         await self.channel_layer.group_add("humidifier.group", self.channel_name)
         await self.channel_layer.group_add("fan.group", self.channel_name)
         await self.channel_layer.group_add("heater.group", self.channel_name)
+        await self.channel_layer.group_add("light.group", self.channel_name)
 
     async def receive(self, mqtt_message: dict) -> None:
         # should we create a table to log all messages topic/payload/qos?
@@ -47,7 +49,9 @@ class mqttConsumer(MqttConsumer):
             case [place, device, "error" | "warning" as issue]:
                 pass
             case _:
-                logger.info(mqtt_message["topic"])
+                logger.info(
+                    "Unhandled message on topic: {}".format(mqtt_message["topic"])
+                )
                 pass
 
     # if the dict key is just the topic with a different sep
@@ -66,6 +70,13 @@ class mqttConsumer(MqttConsumer):
 
     async def heater_switch(self, event):
         await self.publish(settings.MQTT_TOPICS["tent1_heater_power"], event["body"])
+
+    async def light_error(self, event):
+        # should set up an mqtt topic for errors
+        logger.warning(event["issue"])
+        webhook_url = settings.ERROR_DISCORD_WEBHOOK_URL
+        data = {"content": event["issue"]}
+        response = requests.post(url=webhook_url, json=data)
 
     async def disconnect(self) -> None:
         # confirm this field
