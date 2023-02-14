@@ -158,7 +158,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "default": {"format": "%(asctime)s %(name)-28s %(levelname)-8s %(message)s"}
+        "default": {"format": "%(asctime)s\t%(name)-28s\t%(levelname)-8s\t%(message)s"}
     },
     "handlers": {
         "file": {
