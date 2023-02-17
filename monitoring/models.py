@@ -18,8 +18,8 @@ class SensorData(models.Model):
     def __str__(self) -> str:
         return "{}|{}|{}".format(self.host, self.metric, self.data)
 
-    # class Meta:
-    #    get_latest_by = "created_at"
+    class Meta:
+        get_latest_by = "created_at"
 
 
 class SensorHost(models.Model):
