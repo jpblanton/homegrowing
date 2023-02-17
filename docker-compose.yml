@@ -1,6 +1,14 @@
 version: "3.9"
 
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: "5"
+
 services:
+
   web:
     build:
       context: .
@@ -10,6 +18,7 @@ services:
       - homegrowing
     volumes:
       - .:/code
+    logging: *default-logging
     ports:
       - 8000:8000
     depends_on:
@@ -19,6 +28,7 @@ services:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY"
       - "CELERY_BROKER_URL"
+
   asgi:
     build:
       context: .
@@ -26,6 +36,7 @@ services:
     networks:
       - homegrowing
     command: mqttasgi -H 192.168.1.210 -p 1883 config.asgi:application
+    logging: *default-logging
     volumes:
       - .:/code
     depends_on:
@@ -37,16 +48,19 @@ services:
       - "DJANGO_DEBUG=True"
       - "DJANGO_SECRET_KEY"
       - "CELERY_BROKER_URL"
+        
   db:
     image: postgres:13
     networks:
       - homegrowing
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    logging: *default-logging
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     ports:
       - "5432:5432"
+
   celery:
     build:
       context: .
@@ -61,9 +75,11 @@ services:
       - DJANGO_SECRET_KEY
       - DJANGO_ALLOWED_HOSTS
       - CELERY_BROKER
+    logging: *default-logging
     depends_on:
       - web
       - redis
+
   celery-beat:
     build:
       context: .
@@ -71,6 +87,7 @@ services:
     command: celery -A config beat -l info
     networks:
       - homegrowing
+    logging: *default-logging
     volumes:
       - .:/code
     environment:
@@ -80,10 +97,13 @@ services:
       - "CELERY_BROKER_URL"
     depends_on:
       - redis
+
   redis:
     image: redis:6-alpine
     networks:
       - homegrowing
+    logging: *default-logging
+
   mosquitto:
     image: eclipse-mosquitto
     networks:
@@ -93,11 +113,14 @@ services:
       - "9001:9001"
     profiles:
       - mqtt
+    logging: *default-logging
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
+
   # probably need to map the config file for this service
+  # there is a "configs" option that we should look into
   device-control:
     build:
       context: ./device-controller/
@@ -105,6 +128,7 @@ services:
       - /dev/mem:/dev/mem
       - /dev/gpiomem:/dev/gpiomem
     command: python3 device-controller.py --host mqtt
+    logging: *default-logging
     networks:
       - homegrowing
     profiles:
@@ -112,17 +136,20 @@ services:
     depends_on:
       - mosquitto
       - web
+
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
     networks:
       - homegrowing
+    logging: *default-logging
     volumes:
       - grafana_data:/var/lib/grafana
       - ./defaults.ini:/usr/share/grafana/conf/defaults.ini
     depends_on:
       - db
+
 volumes:
   postgres_data:
   grafana_data:

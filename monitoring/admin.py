@@ -7,8 +7,15 @@ from monitoring.models import (
     SensorHost,
     SensorMetric,
     Device,
+    MQTTMessage,
 )
 
+class MQTTMessageAdmin(admin.ModelAdmin):
+    list_display = ['topic', 'payload', 'qos', 'created_at']
+    readonly_fields = ['topic', 'payload', 'qos', 'created_at']
+    date_hierarchy = 'created_at'
+    ordering = ['-created_at']
+    list_filter = ('topic', 'created_at')
 
 class GrowthStageAdmin(admin.ModelAdmin):
     pass
@@ -45,3 +52,4 @@ admin.site.register(SensorHost, SensorHostAdmin)
 admin.site.register(GrowthStage, GrowthStageAdmin)
 admin.site.register(GrowthStageHistory, GrowthStageHistoryAdmin)
 admin.site.register(Device, DeviceAdmin)
+admin.site.register(MQTTMessage, MQTTMessageAdmin)
