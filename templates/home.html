@@ -10,7 +10,8 @@
 <h1>This is our home page.</h1>
 <img class="potplant" src="{% static 'images/dfp.jpg' %}">
 {% if user.is_authenticated %}
-<p>Plants are currently in {{ current_stage }}. </p>
+<p>Plants are currently in {{ current_stage }} since {{ current_stage.created_at }}. </p>
+<p>{{ days_since }}<p>
 <div class="row">
     <div class="col-sm-6">
         <table class="table table-info">
