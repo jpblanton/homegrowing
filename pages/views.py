@@ -1,5 +1,7 @@
 from typing import Any
 import logging
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from django.shortcuts import render, reverse, redirect
 from django.views.generic import TemplateView
@@ -85,6 +87,9 @@ class HomePageView(TemplateView):
             context["current_stage"] = current_stage
         except:
             context["current_stage"] = None
+        else:
+            tz = cache.get("IANA_TIME_ZONE", default="America/New_York")
+            context["days_since"] = (datetime.now(ZoneInfo(tz)) - current_stage.created_at).days
 
         context["humidifier"] = Device.objects.filter(category="humidifier")
         context["fans"] = Device.objects.filter(category="fan")
