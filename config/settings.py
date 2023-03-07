@@ -169,6 +169,13 @@ LOGGING = {
         },
     },
     "root": {"handlers": ["file"], "level": "DEBUG"},
+    "loggers": {
+        "mqttasgi.cli": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": "True",
+        }
+    },
 }
 
 CACHES = {
