@@ -31,7 +31,7 @@ class mqttConsumer(MqttConsumer):
         # also need to start making all messages qos 2
         topic = mqtt_message["topic"]
         payload = mqtt_message["payload"]
-        # payload = payload.decode('utf-8')
+        payload = payload.decode("utf-8")
         qos = mqtt_message["qos"]
         message = await database_sync_to_async(MQTTMessage.objects.create)(
             topic=topic, payload=payload, qos=qos
